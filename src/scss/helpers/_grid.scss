@@ -1,0 +1,90 @@
+
+@import "clearfix";
+
+///
+/// Calculate grid cell/element size
+///
+/// @param  {Number}  $columns  [$c__grid-columns] - The number of columns
+/// @param  {Number}  $gutter   [$c__grid-gutter]  - The gutter size
+/// @param  {Number}  $span     [1]                - Element span
+///
+/// @return {Number}
+///
+@function grid-element-width( $columns, $gutter, $span: 1 ) 
+{
+	@if $span < 1 or $span > $columns {
+		@error 'Invalid element span "#{$span}" on range of 1-#{$columns}';
+	}
+
+	/// (100 - (0 * (12 + 1))) / 12 = 8.333333
+	/// (100 - (1 * (12 + 1))) / 12 = 7.25
+	/// (100 - (2.5 * (12 + 1))) / 12 = 5.625
+	/// (100 - (1 * (x + 1))) / x = y
+	$width : ( 100% - ( $gutter * ( $columns + 1 ) ) ) / $columns;
+
+	@return ( $width * $span ) + ( ( $span - 1 ) * $gutter );
+}
+
+///
+/// Grid row
+///
+/// @require {Mixin}  clearfix()
+///
+@mixin grid__row() 
+{
+	width        : 100%;
+	max-width    : 100%;
+	margin-right : auto;
+	margin-left  : auto;
+	position     : relative;
+	overflow     : visible !important;
+	clear        : both;
+	padding      : 0;
+	
+	@include clearfix();
+}
+
+///
+/// Grid cell
+///
+/// @param  {Number}  $width                      - The width of the cell
+/// @param  {Number}  $gutter  [$c__grid-gutter]  - The cell gutter
+///
+@mixin grid__cell( $width, $gutter ) 
+{
+	@if type-of( $width ) != 'number' or unit( $width ) != '%' {
+		@error( 'Invalid argument #1 passed to grid__cell()' );
+	}
+	@else if type-of( $gutter ) != 'number' or unit( $gutter ) != '%' {
+		@error( 'Invalid argument #2 passed to grid__cell()' );
+	}
+
+	///
+	/// 1. Prevents columns from collapsing when empty.
+	///
+	// float           : left;
+	margin-right    : -100%;
+	position        : relative;
+	min-height      : 1px; /// 1
+	width           : $width;
+	margin-left     : $gutter;
+	list-style-type : none;
+}
+
+///
+/// Grid cell offset
+///
+/// @param  {Number}  $width                      - The width of the cell
+/// @param  {Number}  $gutter  [$c__grid-gutter]  - The cell gutter
+///
+@mixin grid__offset( $width, $gutter ) 
+{
+	@if type-of( $width ) != 'number' or unit( $width ) != '%' {
+		@error( 'Invalid argument #1 passed to grid__offset()' );
+	}
+	@else if type-of( $gutter ) != 'number' or unit( $gutter ) != '%' {
+		@error( 'Invalid argument #2 passed to grid__offset()' );
+	}
+
+	margin-left : $width + ( $gutter * 2 );
+}

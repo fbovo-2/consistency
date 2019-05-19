@@ -1,0 +1,111 @@
+
+@import "common";
+
+///
+/// @type  {Map}
+///
+$c__font-stack : (
+	/// Sans-serif (default)
+	sans-serif : (
+		family : ( Helvetica Neue, Helvetica, Arial, sans-serif ),
+		weight : 400,
+		style  : normal,
+	),
+	sans-serif--regular : (
+		extend : sans-serif,
+	),
+	sans-serif--bold : (
+		extend : sans-serif,
+		weight : 700,
+	),
+) !default;
+
+///
+/// Font-size property mixin
+///
+/// @param   {Number}  $font-size                       - The font size
+/// @param   {Number}  $line-height  [$c__line-height]  - The line height
+/// @param   {Number}  $context      [$c__font-stack]   - The context for REM calculation
+///
+/// @require {Mixin}   rem()
+///
+@mixin font-size( $font-size, $line-height: $c__line-height, $context: $c__font-size ) 
+{
+	@if type-of( $font-size ) != number {
+		@error 'Argument #1 passed to font-size() must be a number.';
+	}
+
+	@if unit( $font-size ) == px {
+		font-size  : $font-size;
+		$font-size : rem( $font-size, $context );
+	}
+
+	font-size : $font-size;
+
+	@if type-of( $line-height ) == number {
+		@if unit( $line-height ) == px {
+			line-height  : $line-height;
+			$line-height : rem( $line-height, $context );
+		}
+
+		line-height : $line-height;
+	}
+}
+
+///
+/// Font stack
+///
+/// @example
+///   p {
+///       @include font( sans-serif ); 
+///       @include font( sans-serif--regular );
+///       @include font( sans-serif--regular, weight style );
+///   }
+///
+/// @param   {String}    $group                              - The group name, optionally with variant and size
+/// @param   {List}      $properties  [family weight style]  - The list of properties to use
+/// @param   {Map}       $font-stack  [$c__font-stack]       - The font stack configuration
+/// 
+/// @require {Function}  map-deep-get()
+/// @require {Function}  contains()
+///
+@mixin font( $group, $properties: family weight style, $font-stack: $c__font-stack ) 
+{
+	@if not map-has-key( $font-stack, $group ) {
+		@error '"#{$group}" is not defined in the font stack.';
+	}
+
+	$font-properties : font-map-get( $group, $font-stack );
+
+	/// Apply other properties
+	@each $property, $values in $font-properties {
+		@if contains( $properties, $property ) {
+			font-#{$property} : map-get( $font-properties, $property );
+		}
+	}
+}
+
+///
+/// Retrieve font properties
+///
+/// @param  {String}  $group  - The group name
+/// @param  {Map}     $map    - The map
+///
+/// @return {Map}
+/// 
+@function font-map-get( $group, $map )
+{
+	$result : ();
+
+	@if map-has-key( $map, $group ) {
+		$result : map-get( $map, $group );
+	}
+
+	@if map-has-key( $result, extend ) {
+		$parent : font-properties-get( map-get( $result, extend ), $map );
+		$result : map-remove( $result, extend );
+		$result : map-merge( $parent, $result );
+	}
+
+	@return $result;
+}

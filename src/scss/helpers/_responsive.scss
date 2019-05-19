@@ -1,0 +1,43 @@
+
+///
+/// @type  {List}
+///
+$c__export-devices : mobile desktop all !default;
+
+///
+/// @type  {Map}
+///
+$c__media-queries  : (
+	mobile  : 'screen',
+	desktop : 'screen and (min-device-width: 20cm) and (min-aspect-ratio: 1)'
+) !default;
+
+///
+/// Responsive media queries handler
+///
+/// @example
+///   .breadcrumbs {
+///       @include on( desktop ) {
+///           ...
+///       }
+///   }
+///
+/// @param  {Arglist}  $devices          - The list of breakpoint identifiers
+///
+@mixin on( $devices... ) 
+{
+	@each $device in $devices {
+		@if index( $c__export-devices, $device ) != null {
+			$media-query : map-get( $c__media-queries, $device );
+
+			@if $media-query != null {
+				@media #{$media-query} {
+					@content;
+				}
+			}
+			@else {
+				@content;
+			}
+		}
+	}
+}

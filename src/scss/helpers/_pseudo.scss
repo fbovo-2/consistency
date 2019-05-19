@@ -1,0 +1,14 @@
+
+///
+/// Pseudo element
+///
+/// @param  {String}  $display  [block]     - The display property
+/// @param  {String}  $pos      [absolute]  - The position
+/// @param  {String}  $content              - The content
+///
+@mixin pseudo( $display: block, $pos: absolute, $content: '' ) 
+{
+	content  : $content;
+	display  : $display;
+	position : $pos;
+}

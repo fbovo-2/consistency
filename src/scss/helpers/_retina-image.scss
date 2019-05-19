@@ -1,0 +1,32 @@
+
+///
+/// @type  {String}
+///
+$c__retina : "only screen and (-webkit-min-device-pixel-ratio: 2), " +
+             "only screen and (min--moz-device-pixel-ratio: 2), " +
+             "only screen and (-o-min-device-pixel-ratio: 2/1), " + 
+             "only screen and (min-device-pixel-ratio: 2), " + 
+             "only screen and (min-resolution: 192dpi), " +
+             "only screen and (min-resolution: 2dppx)" !default;
+
+///
+/// Retina background image
+///
+/// @example
+///   .logo {
+///       background : url( "logo.png" ) no-repeat;
+///       @include retina-image( "logo-2x.png", 100px, 25px );
+///   }
+/// 
+/// @param  {String}  $image           - The image path or URL
+/// @param  {Number}  $width           - The image width
+/// @param  {Number}  $height          - The image height
+///
+@mixin retina-image( $image, $width, $height )
+{
+	@media #{$c__retina} 
+	{
+		background-image : url( $image );
+		background-size  : $width $height;
+	}
+}

@@ -1,0 +1,28 @@
+
+///
+/// @type  {Map}
+///
+$c__z-indexes : (
+	'modal',
+	'header',
+	'wrapper',
+	'footer',
+) !default;
+
+///
+/// Z-index mapper
+///
+/// @param  {String}   $name           - The block identifier
+///
+/// @return {Number}
+///
+@function z-index( $name ) 
+{
+	@if index( $c__z-indexes, $name ) {
+		@return ( length( $c__z-indexes ) - index( $c__z-indexes, $name ) + 1 ) * 10;
+	}
+	@else {
+		@warn 'There is no item "#{$name}" in the list, choose one of: #{$c__z-indexes}';
+		@return 1;
+	}
+}

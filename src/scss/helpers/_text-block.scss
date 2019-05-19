@@ -1,0 +1,32 @@
+
+@import 'common';
+@import 'font';
+
+///
+/// Text block
+///
+/// @param   {Number}  $font-size                       - The fontnt size
+/// @param   {Number}  $line-height  [$c__line-height]  - The line height
+/// @param   {Number}  $context      [$c__font-size]    - The context
+///
+/// @require {Mixin}   rem()
+/// @require {Mixin}   font-size()
+///
+@mixin text-block( $font-size, $line-height: $c__line-height, $context: $c__font-size )
+{
+	@if unit( $font-size ) != unit( $line-height ) {
+		@error 'Mixed units are not supported by text-block().';
+	}
+
+	margin-top    : $line-height;
+	margin-bottom : 0;
+
+	@if type-of( $font-size ) == number and unit( $font-size ) == px {
+		margin-top  : rem( $line-height, $context );
+	}
+
+	// Re-calculate line-height
+	$line-height : ceil( $font-size / $line-height ) * $line-height;
+
+	@include font-size( $font-size, $line-height, $context );
+}

@@ -1,0 +1,14 @@
+
+///
+/// Truncate a text
+///
+/// @param  {Number}  $max-width              - The maximum width
+/// @param  {String}  $overflow   [ellipsis]  - The text-overflow
+///
+@mixin truncate( $max-width, $overflow: ellipsis ) 
+{
+	max-width     : $max-width;
+	white-space   : nowrap;
+	overflow      : hidden;
+	text-overflow : $overflow;
+}

@@ -1,0 +1,40 @@
+
+@import "common";
+@import "font";
+
+///
+/// Form input block
+///
+/// @param   {Number}  $font-size                       - The fontnt size
+/// @param   {Number}  $line-height  [$c__line-height]  - The line height
+/// @param   {Number}  $context      [$c__font-size]    - The context
+///
+/// @require {Mixin}   rem()
+/// @require {Mixin}   font-size()
+///
+@mixin input-block( $font-size, $line-height: $c__line-height, $context: $c__font-size )
+{
+	@if unit( $font-size ) != unit( $line-height ) {
+		@error "Mixed units are not supported by input-block().";
+	}
+
+	display        : block;
+	display        : inline-block;
+	margin-top     : $line-height / 4 * 3;
+	margin-bottom  : -( $line-height / 4 );
+	padding-top    : $line-height / 4;
+	padding-bottom : $line-height / 4;
+
+	// REM
+	@if type-of( $font-size ) == number and unit( $font-size ) == px {
+		margin-top     : rem( $line-height / 4 * 3, $context );
+		margin-bottom  : rem( $line-height / 4, $context );
+		padding-top    : rem( $line-height / 4, $context );
+		padding-bottom : rem( $line-height / 4, $context );
+	}
+
+	// Re-calculate line-height
+	$line-height : ceil( $font-size / $line-height ) * $line-height;
+
+	@include font-size( $font-size, $line-height, $context );
+}

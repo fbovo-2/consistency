@@ -1,0 +1,79 @@
+
+///
+/// @type   {Number}
+///
+$c__font-size   : 16px !default;
+
+///
+/// @type   {Number}
+///
+$c__line-height : 24px !default;
+
+///
+/// Map deep get
+///
+/// @param  {Map}      $map            - Map
+/// @param  {Arglist}  $keys           - Keys to fetch
+///
+/// @return {Map}
+///
+@function map-deep-get( $map, $keys... )
+{
+	@each $key in $keys {
+		$map : map-get( $map, $key );
+	}
+
+	@return $map;
+}
+
+///
+/// Checks if a list contains a value(s)
+///
+/// @param  {List}     $list            - The list to check against
+/// @param  {Arglist}  $values          - A single value or list of values to check for
+///
+/// @return {Bool}
+/// 
+@function contains( $list, $values... ) 
+{
+	@each $value in $values {
+		@if type-of( index( $list, $value ) ) != number {
+			@return false;
+		}
+	}
+
+	@return true;
+}
+
+///
+/// Strip units from a value
+///
+/// @param  {Number}  $num            - The number
+///
+/// @return {Number}
+///
+@function strip-units( $num ) 
+{
+	@return $num / ( $num * 0 + 1 );
+}
+
+///
+/// PX to REM conversion
+///
+/// @param  {Number}  $pixels                       - The size in pixels
+/// @param  {Number}  $context  [$base__font-size]  - The context base size
+///
+/// @return {Number}
+///
+@function rem( $pixels, $context: $c__font-size ) 
+{
+	@if unitless( $pixels ) {
+		$pixels : $pixels * 1px;
+	}
+
+	@if unitless( $context ) {
+		$context : $context * 1px;
+	}
+
+	@return $pixels / $context * 1rem;
+}
