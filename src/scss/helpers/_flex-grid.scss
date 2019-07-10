@@ -1,0 +1,62 @@
+
+///
+/// Flex grid row
+///
+/// @param  {Number}  $gutter  [$c__flex-grid-gutter]  - The gutter
+///
+@mixin flex-grid__row( $gutter ) 
+{
+	display   : flex;
+	flex-wrap : wrap;
+
+	@if $gutter > 0 {
+		margin-right : -$gutter;
+		margin-left  : -$gutter;
+	}
+}
+
+///
+/// Grid cell offset
+///
+/// @param  {Number}  $width                      - The width of the cell
+/// @param  {Number}  $gutter  [$c__grid-gutter]  - The cell gutter
+///
+@mixin flex-grid__offset( $span ) 
+{
+	/// Avoid emitting useless offset
+	@if $span > 0 {
+		margin-left : $span;
+	}
+}
+
+///
+/// Flex grid cell
+///
+/// @param  {Number}  $width                      - The width of the cell
+/// @param  {Number}  $gutter  [$c__grid-gutter]  - The cell gutter
+///
+@mixin flex-grid__cell( $width, $gutter ) 
+{
+	%flex-grid__cell {
+		position  : relative;
+		width     : 100%;
+		max-width : 100%;
+	}
+
+	@if $width == 'auto' {
+		flex      : 0 0 auto;
+		width     : auto;
+		max-width : 100%; /// Reset earlier grid tiers
+	}
+	@else if type-of( $width ) == 'number' {
+		flex-basis : 0;
+		flex-grow  : 1;
+		flex       : 0 0 $width;
+		max-width  : $width;
+	}
+
+	@if ( $gutter > 0 ) {
+		padding-right : $gutter;
+		padding-left  : $gutter;
+	}
+}
